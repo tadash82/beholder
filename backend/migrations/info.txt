@@ -1,0 +1,9 @@
+npx sequelize-cli migration:generate --name create-settings
+
+/migration/123-create-settings.js
+
+criar banco de dados
+npx sequelize-cli db:create
+
+criar tabela
+npx sequelize-cli db:migrate

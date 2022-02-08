@@ -19,12 +19,15 @@ function Login() {
   function onSubmit(event) {
     event.preventDefault();
     // console.log(email + ' : ' + password)
-    doLogin(email, password).then(isValid => {
-      if(isValid) {
+    doLogin(email, password)
+    .then(response => {
+      if(response) {
+        localStorage.setItem('token', response.token)
         history.push('/settings')
       } 
     }).catch(err => {
-      setError(err)
+      console.error(err);
+      setError(`Invalid user and/or password!`)
     });
    
   }

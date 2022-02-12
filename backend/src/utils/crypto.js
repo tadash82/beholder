@@ -12,7 +12,7 @@ function encrypt(text) {
   const aesCTR = new aes.ModeOfOperation.ctr(key);
   const encryptedBytes = aesCTR.encrypt(bytesInfo);
   const encryptedHex = aes.utils.hex.fromBytes(encryptedBytes);
-  console.log(encryptedHex);
+  // console.log(encryptedHex);
   return encryptedHex;
 }
 
@@ -21,7 +21,7 @@ function decrypt(encryptedHex) {
   const aesCTR = new aes.ModeOfOperation.ctr(key);
   const decryptedBytes = aesCTR.decrypt(encryptedBytes);
   const text = aes.utils.utf8.fromBytes(decryptedBytes);
-  console.log(text);
+  // console.log(text);
   return text;
 }
 

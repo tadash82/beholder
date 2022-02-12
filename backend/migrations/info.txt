@@ -10,3 +10,5 @@ npx sequelize-cli db:migrate
 
 seeders - dados iniciais.
 npx sequelize-cli seed:generate --name default-settings
+
+npx sequelize-cli db:seed:all

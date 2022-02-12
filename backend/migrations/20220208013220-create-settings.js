@@ -21,7 +21,7 @@ module.exports = {
       accessKey: Sequelize.STRING,
       secretKey: Sequelize.STRING,
       createdAt: Sequelize.DATE,
-      updatetAt: Sequelize.DATE
+      updatedAt: Sequelize.DATE
     }, {
       indexes: [{
         fields: ['email'],

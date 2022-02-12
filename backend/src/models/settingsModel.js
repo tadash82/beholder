@@ -20,7 +20,7 @@ const settingsModel = database.define('settings', {
   accessKey: Sequelize.STRING,
   secretKey: Sequelize.STRING,
   createdAt: Sequelize.DATE,
-  updatetAt: Sequelize.DATE
+  updatedAt: Sequelize.DATE
 }, {
   indexes: [{
     fields: ['email'],

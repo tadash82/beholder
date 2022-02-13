@@ -15,7 +15,8 @@ app.use(express.json());
 
 app.post('/login', authController.doLogin);
 app.get('/settings',authMiddleware, settingsController.getSettings);
-app.post('logout', authController.doLogout)
+app.patch('/settings', authMiddleware, settingsController.updateSettings);
+app.post('/logout', authController.doLogout)
 app.use('/beholder', (req, res, next) => {
   res.send('hello beholder!!!');
 });

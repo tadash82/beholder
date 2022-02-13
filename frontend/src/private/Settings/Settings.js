@@ -1,27 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import { getSettings } from '../../services/SettingsService';
-import { doLogout } from '../../services/AuthServices';
+//import { doLogout } from '../../services/AuthServices';
 import Menu from '../../components/Menu/Menu';
  
 function Settings() {
+
+  const inputEmail = useRef('');
+  const inputNewPassword = useRef('');
+  const inputConfirmPassword = useRef('');
+  const inputApiUrl = useRef('');
+  const inputAccessKey = useRef('');
+  const inputSecretKey = useRef('');
+
   const history = useHistory();
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-  const [ settings, setSettings] = useState({
-    email: '',
-    apiUrl: '',
-    accessKey: '',
-    keySecret: ''
-  })
+
 
   useEffect(() => {
     
     const token = localStorage.getItem('token');
     
     getSettings(token)
-      .then(response => {
-        setSettings(response);
+      .then(settings => {
+        inputEmail.current.value = settings.email;
+        console.log(settings.email)
+        inputApiUrl.current.value = settings.apiUrl
+        console.log(settings.apiUrl);
+        inputAccessKey.current.value = settings.accessKey;
     })
       .catch(err=> {
         if(err.response && err.response.status === 401) {
@@ -35,7 +43,7 @@ function Settings() {
     })
   }, [history])
 
-  function onLogoutClick() {
+  /* function onLogoutClick() {
     const token = localStorage.getItem('token')
     doLogout(token)
       .then(response => {
@@ -46,31 +54,98 @@ function Settings() {
         console.error(err);
       })
     localStorage.removeItem('token')
-  };
+  }; */
+
+  function onFormSubmit(event){
+
+  }
 
   return(
     <React.Fragment>
       <Menu />
-      <main>
-        <section className='vh-lg-100 mt-5 mg-lg-0 bg-soft d-flex align-items-center'>
-          <div className='container'>
-            <p className='text-center'>
-              <Link to="/" className='d-flex align-items-center justify-content-center'>
-              <svg className="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path fillRule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd"></path>
-              </svg>
-                  {settings.email}
-              </Link>
-              <button type='button' className='btn btn-primary' onClick={onLogoutClick}>Logout</button>
-              {
-                error
-                ? <div className='alert alert-danger'>{error}</div>
-                : <React.Fragment></React.Fragment>
-
-              }
-            </p>
+      <main className='content'>
+        <div className='d-flex justify-content-between flex-wrap flex-md-now-rap align-center py-4'>
+          <div className='d-block mb-4 mb-md-0'>
+            <h1 className='h4'>
+              Settings
+            </h1>
           </div>
-        </section>
+          <div className='col-12'>
+            <div className='card card-body border-0 shadow mb-4'>
+              <h2 className='h5 mb-4'>
+                General info
+              </h2>
+              <form onSubmit={onFormSubmit}>
+                <div className='row'>
+                  <div className='col-md-6 mb-3'>
+                    <div className='form-group'>
+                      <label htmlFor="email">Email</label>
+                      <input ref={inputEmail} className="form-control" id='email' type="email" placeholder='name@company.com' required />
+                    </div>
+                  </div>
+                </div>
+                <div className='row'>
+                  <div className='col-md-6 mb-3'>
+                    <div className='form-group'>
+                      <label htmlFor="newPassword">New Password</label>
+                      <input ref={inputNewPassword} className="form-control" id='newPassword' type="password" placeholder='Enter your new Passowrd' required />
+                    </div>
+                  </div>
+                  <div className='col-md-6 mb-3'>
+                    <div className='form-group'>
+                      <label htmlFor="confirmPassword">Confirm Password</label>
+                      <input ref={inputConfirmPassword} className="form-control" id='confirmPassword' type="password" placeholder='Your new password again' required />
+                    </div>
+                  </div>
+                </div>
+                <h2 className='h5 my-4'>Exchange Info</h2>
+                <div className='row'>
+                  <div className='col-sm-12 mb-3'>
+                    <div className='form-group'>
+                      <label htmlFor="apiUrl">API URL</label>
+                      <input ref={inputApiUrl} type="text" className='form-control' id='apiUrl' placeholder='Enter the API URL' />
+                    </div>
+                  </div>
+                </div>
+                <div className='row'>
+                  <div className='col-sm-12 mb-3'>
+                    <div className='form-group'>
+                      <label htmlFor="accessKey">Access Key</label>
+                      <input ref={inputAccessKey} type="text" className='form-control' id='accessKey' placeholder='Enter the Access Key' />
+                    </div>
+                  </div>
+                </div>
+                <div className='row'>
+                  <div className='col-sm-12 mb-3'>
+                    <div className='form-group'>
+                      <label htmlFor="secretKey">New Secret Key</label>
+                      <input ref={inputSecretKey} type="password" className='form-control' id='secretKey' placeholder='Enter the Secret Key' />
+                    </div>
+                  </div>
+                </div>
+                <div className='row'>
+                  <div className='d-flex justify-content-between flex-wrap flex-md-nowrap'>
+                    <div className='col-sm-3'>
+                      <button className='btn btn-gray-800 mt-2 animate-up-2' type='submit'>
+                        Save
+                      </button>
+                      {
+                        error ? 
+                          <div className='alert alert-danger mt-2 col-9 py-2'>{error}</div>
+                          : <React.Fragment></React.Fragment>  
+                      }
+                      {
+                        success ? 
+                        <div className='alert alert-success mt-2 col-9 py-2'>{success}</div>
+                        : <React.Fragment></React.Fragment>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>        
       </main>
     </React.Fragment>
   )

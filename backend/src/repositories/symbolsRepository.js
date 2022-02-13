@@ -9,21 +9,21 @@ function getSymbol(symbol) {
 }
 
 async function updateSymbol(symbol, newSymbol) {
-  const currentSymbol = await getSettings(symbol);
+  const currentSymbol = await getSymbol(symbol);
 
-  if(newSymbol.basePrecision !== currentSymbol.basePrecision) {
+  if(newSymbol.basePrecision && newSymbol.basePrecision !== currentSymbol.basePrecision) {
     currentSymbol.basePrecision = newSymbol.basePrecision;
   }
-  if(newSymbol.quotePrecision !== currentSymbol.quotePrecision) {
+  if(newSymbol.quotePrecision && newSymbol.quotePrecision !== currentSymbol.quotePrecision) {
     currentSymbol.quotePrecision = newSymbol.quotePrecision;
   }
-  if(newSymbol.minNotional !== currentSymbol.minNotional) {
+  if(newSymbol.minNotional && newSymbol.minNotional !== currentSymbol.minNotional) {
     currentSymbol.minNotional = newSymbol.minNotional;
   }
-  if(newSymbol.minLotSize !== currentSymbol.minLotSize) {
+  if(newSymbol.minLotSize && newSymbol.minLotSize !== currentSymbol.minLotSize) {
     currentSymbol.minLotSize = newSymbol.minLotSize;
   }
-  if(newSymbol.isFavorite !== currentSymbol.isFavorite) {
+  if(newSymbol.isFavorite !== null && newSymbol.isFavorite !== undefined && newSymbol.isFavorite !== currentSymbol.isFavorite) {
     currentSymbol.isFavorite = newSymbol.isFavorite;
   }
   

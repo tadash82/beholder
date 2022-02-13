@@ -1,15 +1,21 @@
-const settingsRepository = require('../repositories/settingsRepository');
+const symbolsRepository = require('../repositories/symbolsRepository');
 
 async function getSymbols(req, res, next) {
-  res.sendStatus(200);
+  const symbols = await symbolsRepository.getSymbols();
+  res.json(symbols);
 }
 
 async function updateSymbol(req, res, next) {
+  const newSymbol = req.body;
+  const symbol = req.params.symbol;
+  await symbolsRepository.updateSymbol(symbol, newSymbol);
   res.sendStatus(200);
 }
 
 async function getSymbol(req, res, next) {
-  res.sendStatus(200);
+  const symbol = req.params.symbol;
+  const symbolsData = await symbolsRepository.getSymbol(symbol);
+  res.json(symbolsData);
 }
 
 async function syncSymbol(req, res, next) {

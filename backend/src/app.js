@@ -5,8 +5,10 @@ const helmet = require('helmet');
 const authMiddleware = require('./middlewares/authMiddleware');
 const errorMiddleware = require('./middlewares/errorMiddleware');
 const authController = require('./controllers/authController');
-const settingsController = require('./controllers/settingsController');
+
 const morgan = require('morgan');
+const settingsRouter = require('./routers/settingsRouter');
+const symbolRouter = require('./routers/symbolRouter');
 
 const app = express();
 
@@ -16,8 +18,10 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 app.post('/login', authController.doLogin);
-app.get('/settings',authMiddleware, settingsController.getSettings);
-app.patch('/settings', authMiddleware, settingsController.updateSettings);
+
+app.use('/settings', authMiddleware, settingsRouter)
+app.use('/symbols', authMiddleware, symbolRouter )
+
 app.post('/logout', authController.doLogout)
 app.use('/beholder', (req, res, next) => {
   res.send('hello beholder!!!');

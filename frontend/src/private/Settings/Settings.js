@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import { getSettings } from '../../services/SettingsService';
+import { getSettings, updateSettings } from '../../services/SettingsService';
 //import { doLogout } from '../../services/AuthServices';
 import Menu from '../../components/Menu/Menu';
  
@@ -57,6 +57,37 @@ function Settings() {
   }; */
 
   function onFormSubmit(event){
+    event.preventDefault();
+    if((inputNewPassword.current.value || inputConfirmPassword.current.value) 
+    && inputNewPassword.current.value !== inputConfirmPassword.current.value) {
+      return setError('The fields New Password and Confirm Password must be equals')
+    }
+
+    const token = localStorage.getItem('token');
+    updateSettings({
+      email: inputEmail.current.value,
+      password: inputNewPassword.current.value ? inputConfirmPassword.current.value : null, 
+      apiUrl: inputApiUrl.current.value,
+      accessKey: inputAccessKey.current.value,
+      secretKey: inputSecretKey.current.value ? inputSecretKey.current.value : null, 
+    }, token)
+    .then(result => {
+      if(result) {
+        setError('');
+        setSuccess(`Settingsupdated successfully!`);
+        inputSecretKey.current.value = '';
+        inputNewPassword.current.value = '';
+        inputConfirmPassword.current.value = '';
+      } else {
+        setSuccess('');
+        setError(`Can't update the settings!!`)
+      }
+    })
+    .catch(error => {
+        setSuccess('');
+        console.error(error.message);
+        setError(`Can't update the settings!!`)
+    })
 
   }
 
@@ -129,19 +160,20 @@ function Settings() {
                       <button className='btn btn-gray-800 mt-2 animate-up-2' type='submit'>
                         Save
                       </button>
-                      {
+                    </div>
+                    
+                  </div>
+                </div>
+                       {
                         error ? 
-                          <div className='alert alert-danger mt-2 col-9 py-2'>{error}</div>
+                          <div className='alert alert-danger mt-2 col-4 py-2 '>{error}</div>
                           : <React.Fragment></React.Fragment>  
                       }
                       {
                         success ? 
-                        <div className='alert alert-success mt-2 col-9 py-2'>{success}</div>
+                        <div className='alert alert-success mt-2 col-4 py-2'>{success}</div>
                         : <React.Fragment></React.Fragment>
                       }
-                    </div>
-                  </div>
-                </div>
               </form>
             </div>
           </div>

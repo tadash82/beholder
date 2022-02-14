@@ -61,6 +61,19 @@ function Symbols() {
     console.log(symbolObj)
     setEditSymbol(symbolObj)
   }
+
+  function loadSymbols() {
+    const token = localStorage.getItem('token');
+    getSymbols(token)
+      .then(symbols => {
+        setSymbols(filterSymbolObjects(symbols, quote))
+      })
+      .catch(err => setError(err.message))
+  }
+
+  function onModalSubmit(event) {
+    loadSymbols();
+  }
   return (
     <>
        <div className="row">
@@ -122,7 +135,7 @@ function Symbols() {
           </div>
         </div>
       </div>
-      <SymbolModal data={editSymbol}/>
+      <SymbolModal data={editSymbol} onSubmit={onModalSubmit}/>
     </>
   )
 }

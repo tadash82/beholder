@@ -1,6 +1,18 @@
 const database = require('./db');
 const app = require('./app');
+const settingsRepository = require('./repositories/settingsRepository');
+const appEm = require('./app-em');
 
-app.listen(process.env.PORTA, () => {
-  console.log('App is running in 3001');
-});
+settingsRepository.getSettings(1)
+  .then(settings => {
+    appEm(settings);
+
+    app.listen(process.env.PORTA, () => {
+      console.log('App is running in 3001');
+    });
+    
+  })
+  .catch(err => {
+    console.error(err);
+  })
+

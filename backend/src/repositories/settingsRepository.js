@@ -10,7 +10,7 @@ function getSettings(id) {
   return settingsModel.findOne({where: {id}});
 }
 
-async function updeteSettings(id, newSettings) {
+async function updateSettings(id, newSettings) {
   const currentSettings = await getSettings(id);
 
   if(newSettings.email !== currentSettings.email) {
@@ -27,8 +27,26 @@ async function updeteSettings(id, newSettings) {
   await currentSettings.save();
 }
 
+const settingsCache = {}
+async function getDecryptedSettings(id) {
+  let settings = settingsCache[id];
+
+  if(!settings) {
+    settings = await getSettings(id);
+    settings.secretKey = crypto.decrypt(settings.secretKey);
+    settingsCache[id] = settings;
+  }
+  return settings;
+}
+
+function clearSettingsCache(id) {
+  settingsCache[id] = null;
+}
+
 module.exports = { 
   getSettingsByEmail,
   getSettings,
-  updeteSettings
+  updateSettings,
+  getDecryptedSettings,
+  clearSettingsCache
 }

@@ -21,12 +21,12 @@ export async function getSymbol(symbol, token) {
   return response.data;
 }
 
-export async function updateSymbol(symbol, token) {
-  const symbolUrl = `${API_URL}/symbol/${symbol.symbol}`;
+export async function updateSymbol(symbolData, token) {
+  const symbolUrl = `${API_URL}/symbols/${symbolData.symbol}`;
   const headers = {
     'authorization': token
   }
-  const response = await axios.patch(symbolUrl, symbol, { headers });
+  const response = await axios.patch(symbolUrl, symbolData, { headers });
   return response.data;
 }
 

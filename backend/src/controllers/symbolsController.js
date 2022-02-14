@@ -22,11 +22,10 @@ async function getSymbol(req, res, next) {
 }
 
 async function syncSymbol(req, res, next) {
+  const favoriteSymbols = (await symbolsRepository.getSymbols()).filter(s => s.isFavorite).map(s => s.symbol);
+
   const settingsRepository = require('../repositories/settingsRepository');
-  const settings = await settingsRepository.getSettings(res.locals.token.id)
-  
-   // console.log('é config' + settings)
-  settings.secretKey = crypto.decrypt(settings.secretKey);
+  const settings = await settingsRepository.getDecryptedSettings(res.locals.token.id)
   const { exchangeInfo } = require('../utils/exchange')(settings.get({plain: true}));
   const symbols = (await exchangeInfo()).symbols.map(item => {
     const minNotionalFilter = item.filters.find(f => f.filterType === 'MIN_NOTIONAL');
@@ -35,12 +34,14 @@ async function syncSymbol(req, res, next) {
       symbol: item.symbol,
       basePrecision: item.baseAssetPrecision,
       quotePrecision: item.quoteAssetPrecision,
+      base: item.baseAsset,
+      quote: item.quoteAsset,
       minNotional: minNotionalFilter ? minNotionalFilter.minNotional : '1',
       minLotSize: minLotSizeFilter ? minLotSizeFilter.minQty : '1',
-      isFavorite: false
+      isFavorite: favoriteSymbols.some(s => s === item.symbol)
     }
   })
-   console.log(symbols)
+  // console.log(symbols)
   await symbolsRepository.deleteAll();
   await symbolsRepository.bulkInsert(symbols);
   

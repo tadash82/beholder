@@ -3,7 +3,7 @@ const app = require('./app');
 const settingsRepository = require('./repositories/settingsRepository');
 const appEm = require('./app-em');
 
-settingsRepository.getSettings(1)
+settingsRepository.getDefaulSettings()
   .then(settings => {
     appEm(settings);
 

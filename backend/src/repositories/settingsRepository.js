@@ -10,6 +10,10 @@ function getSettings(id) {
   return settingsModel.findOne({where: {id}});
 }
 
+function getDefaulSettings() {
+  return settingsModel.findOne();
+}
+
 async function updateSettings(id, newSettings) {
   const currentSettings = await getSettings(id);
 
@@ -48,5 +52,6 @@ module.exports = {
   getSettings,
   updateSettings,
   getDecryptedSettings,
-  clearSettingsCache
+  clearSettingsCache,
+  getDefaulSettings
 }

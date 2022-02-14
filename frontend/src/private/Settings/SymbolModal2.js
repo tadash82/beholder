@@ -7,9 +7,9 @@ import React, { useState, useEffect, useRef } from "react";
  */
 
 function SymbolModal(props) {
-  const btnClose = useRef('');
-  const [ symbol, setSymbol ] = useState({})
-  const [ error, setError ] = useState('');
+  const btnClose = ''
+  const [symbol, setSymbol ] = useState({})
+  const [error, setError ] = useState('');
 
   useEffect(() => {
     if(!props.data)
@@ -18,7 +18,7 @@ function SymbolModal(props) {
   },[props.data])
 
   function onInputChange(event) {
-    setSymbol(prevState => ({...prevState,[event.target.id]: event.target.value }));
+    setSymbol(prevState => ({...prevState,[event.target.id]: event.target.value }))
   }
 
   function onSubmit(event) {
@@ -30,7 +30,7 @@ function SymbolModal(props) {
   }
 
 
-  function onFavoriteClick(event) {
+  function onFavoriteClick(e) {
     setSymbol(prevState => ({...prevState, isFavorite: !symbol.isFavorite }))
   }
   return (
@@ -94,9 +94,9 @@ function SymbolModal(props) {
           </form>
           
           <div className="modal-footer">
-            {error
-              ? <><div className="alert alert-danger">{error}</div> </>: <></>
-            }
+        {/*     {error
+              ? <div className="alert alert-danger">{error}</div> : <></>
+            } */}
             <button type="submit" className="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalSymbol">
               Save
             </button>

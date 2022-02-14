@@ -9,6 +9,13 @@ function Symbols() {
   const history = useHistory();
   const [ symbols, setSymbols ] = useState([]);
   const [ error, setError ] = useState('');
+  const [ editSymbol, setEditSymbol ] = useState({
+    symbol: '',
+    basePrecision: 0,
+    quotePrecision: 0,
+    minLotSize: '',
+    minNotation: ''
+  });
   const [ success, setSuccess ] = useState('');
   const [ isSyncing, setIsSyncing ] = useState(false);
   const [ quote, setQuote ] = useState(getDefaultQuote());
@@ -48,6 +55,12 @@ function Symbols() {
     setDefaultQuote(event.target.value);
   }
 
+  function onEditClick(event) {
+    const symbol = event.target.id.replace('edit','');
+    const symbolObj = symbols.find(s => s.symbol === symbol)
+    console.log(symbolObj)
+    setEditSymbol(symbolObj)
+  }
   return (
     <>
        <div className="row">
@@ -77,7 +90,7 @@ function Symbols() {
                     </tr>
                   </thead>
                   <tbody>
-                    {symbols.map(item => <SymbolRow key={item.symbol} data={item} />)}
+                    {symbols.map(item => <SymbolRow key={item.symbol} data={item} onClick={onEditClick}/>)}
                   </tbody>
                   <tfoot>
                   <tr>
@@ -109,7 +122,7 @@ function Symbols() {
           </div>
         </div>
       </div>
-      <SymbolModal />
+      <SymbolModal data={editSymbol}/>
     </>
   )
 }

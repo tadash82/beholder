@@ -12,6 +12,7 @@ const symbolRouter = require('./routers/symbolRouter');
 
 const app = express();
 
+//app.use(cors({ origin: '*'}));
 app.use(cors({origin: process.env.CORS_ORIGIN}));
 app.use(helmet());
 app.use(express.json());

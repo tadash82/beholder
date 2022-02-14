@@ -8,6 +8,6 @@ module.exports = (settings) => {
   const exchange = require('./utils/exchange')(settings);
 
   exchange.miniTickerStream((markets) => {
-    console.log(markets);
+    // console.log(markets);
   })
 }

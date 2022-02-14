@@ -23,12 +23,7 @@ app.use('/settings', authMiddleware, settingsRouter)
 app.use('/symbols', authMiddleware, symbolRouter )
 
 app.post('/logout', authController.doLogout)
-app.use('/beholder', (req, res, next) => {
-  res.send('hello beholder!!!');
-});
-app.use('/', (req, res, next) => {
-  res.send('hello world!!!');
-});
+
 app.use(errorMiddleware);
 
 module.exports = app;

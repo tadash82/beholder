@@ -27,9 +27,9 @@ function Settings() {
     getSettings(token)
       .then(settings => {
         inputEmail.current.value = settings.email;
-        console.log(settings.email)
+        // console.log(settings.email)
         inputApiUrl.current.value = settings.apiUrl
-        console.log(settings.apiUrl);
+        // console.log(settings.apiUrl);
         inputAccessKey.current.value = settings.accessKey;
     })
       .catch(err=> {

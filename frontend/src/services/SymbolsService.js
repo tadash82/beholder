@@ -31,7 +31,7 @@ export async function updateSymbol(symbol, token) {
 }
 
 export async function syncSymbols(token) {
-  const symbolUrl = `${API_URL}/symbol/sync`;
+  const symbolUrl = `${API_URL}/symbols/sync`;
   const headers = {
     'authorization': token
   }

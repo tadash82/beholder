@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { getSymbols, syncSymbols } from '../../services/SymbolsService';
 import { useHistory } from 'react-router-dom';
+import { getSymbols, syncSymbols } from '../../services/SymbolsService';
 import SymbolRow from "./SymbolRow";
 
 function Symbols() {
@@ -13,33 +13,36 @@ function Symbols() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     getSymbols(token)
-      .then(symbols => {
-        setSymbols(symbols)
-      })
-      .catch(error => {
-        if(error.response && error.response.status === 401) return history.push('/')
-        console.error(error.message);
-        setError(error.message);
-        setSuccess('')
-      })
-  }, [history, isSyncing])
+    .then(symbols => {
+      setSymbols(symbols);
+    }).catch(err => {
+      if(err.response && err.response.status === 401) return history.push('/')
+      console.error(err.message);
+      setError(err.message);
+      setSuccess('')
+    })
+  },[history, isSyncing])
 
   function onSyncClick(event) {
     const token = localStorage.getItem('token');
     setIsSyncing(true);
+    
     syncSymbols(token)
-      .then(response => setIsSyncing(false))
-      .catch(error => {
-        if(error.response && error.response.status === 401) return history.push('/')
-        console.error(error.message);
-        setError(error.message);
+      .then(response => {
+        setIsSyncing(false)
+        setSuccess('Sucesso!!')
+      })
+      .catch(err => {
+        if(err.response && err.response.status === 401) return history.push('/')
+        console.error(err.message);
+        setError(err.message);
         setSuccess('')
       })
   }
 
   return (
     <>
-      <div className="row">
+       <div className="row">
         <div className="col-12">
           <div className="col-12 mb-4">
             <div className="card border-0 shadow">
@@ -66,22 +69,24 @@ function Symbols() {
                     {symbols.map(item => <SymbolRow key={item.symbol} data={item} />)}
                   </tbody>
                   <tfoot>
-                    <tr>
+                  <tr>
                       <td colSpan={2}>
-                        <button className="btn btn-primary animate-up-2" type="button" onClick={onSyncClick}>
+                        <button className="btn btn-primary animate-up-2" type="button" onClick={onSyncClick} >
                           <svg className="icon icon-xs" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                           </svg>
-                          {isSyncing ? "Synciong..." : "Sync"}
+                          {isSyncing ? "Syncing..." : "Sync"}
                         </button>
+                        
                       </td>
+                     
                       <td>
-                        {error
-                          ? <div className="alert alert-danger"> {error}</div> 
+                      {error
+                          ?<> <div className="alert alert-danger text-center"> {error}</div> </>
                           : <></>
                         }
                         {success
-                          ? <div className="alert alert-success"> {success}</div> 
+                          ? <><div className="alert alert-success text-center"> {success}</div> </>
                           : <></>
                         }
                       </td>
@@ -93,13 +98,6 @@ function Symbols() {
           </div>
         </div>
       </div>
-
-
-
-
-      {error ? <div className="alert alert-danger">{error}</div>
-      : <></>  
-    }
     </>
   )
 }

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from 'react-router-dom';
 import { getSymbols, syncSymbols } from '../../services/SymbolsService';
 import SymbolRow from "./SymbolRow";
+import SelectQuote, { getDefaultQuote, filterSymbolObjects, setDefaultQuote } from "../../components/SelectQuote/SelectQuote";
+import SymbolModal from "./SymbolModal";
 
 function Symbols() {
   const history = useHistory();
@@ -9,19 +11,20 @@ function Symbols() {
   const [ error, setError ] = useState('');
   const [ success, setSuccess ] = useState('');
   const [ isSyncing, setIsSyncing ] = useState(false);
+  const [ quote, setQuote ] = useState(getDefaultQuote());
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     getSymbols(token)
     .then(symbols => {
-      setSymbols(symbols);
+      setSymbols(filterSymbolObjects(symbols, quote));
     }).catch(err => {
       if(err.response && err.response.status === 401) return history.push('/')
       console.error(err.message);
       setError(err.message);
       setSuccess('')
     })
-  },[history, isSyncing])
+  },[history, isSyncing, quote])
 
   function onSyncClick(event) {
     const token = localStorage.getItem('token');
@@ -40,6 +43,11 @@ function Symbols() {
       })
   }
 
+  function onQuoteChange(event) {
+    setQuote(event.target.value);
+    setDefaultQuote(event.target.value);
+  }
+
   return (
     <>
        <div className="row">
@@ -50,6 +58,9 @@ function Symbols() {
                 <div className="row align-items-center">
                   <div className="col">
                     <h2 className="fs-5 fw-bold mb-0"> Symbols</h2>
+                  </div>
+                  <div className="col">
+                    <SelectQuote onChange={onQuoteChange}/>
                   </div>
                 </div>
               </div>
@@ -98,6 +109,7 @@ function Symbols() {
           </div>
         </div>
       </div>
+      <SymbolModal />
     </>
   )
 }

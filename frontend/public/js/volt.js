@@ -15,7 +15,7 @@
 
 */
 
-"use strict";
+
 const d = document;
 d.addEventListener("DOMContentLoaded", function(event) {
 

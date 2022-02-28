@@ -1,13 +1,13 @@
-const settingsModel = require('../models/settingsModel');
-const bcrypt = require('bcryptjs');
-const crypto = require('../utils/crypto');
+const settingsModel = require("../models/settingsModel");
+const bcrypt = require("bcryptjs");
+const crypto = require("../utils/crypto");
 
 function getSettingsByEmail(email) {
   return settingsModel.findOne({ where: { email } });
 }
 
 function getSettings(id) {
-  return settingsModel.findOne({where: {id}});
+  return settingsModel.findOne({ where: { id } });
 }
 
 function getDefaulSettings() {
@@ -17,25 +17,27 @@ function getDefaulSettings() {
 async function updateSettings(id, newSettings) {
   const currentSettings = await getSettings(id);
 
-  if(newSettings.email !== currentSettings.email) {
+  if (newSettings.email !== currentSettings.email) {
     currentSettings.email = newSettings.email;
   }
-  if(newSettings.password)
-    currentSettings.password = bcrypt.hashSync(newSettings.password)
+  if (newSettings.password)
+    currentSettings.password = bcrypt.hashSync(newSettings.password);
   if (newSettings.apiUrl !== currentSettings.apiUrl)
     currentSettings.apiUrl = newSettings.apiUrl;
+  if (newSettings.streamUrl !== currentSettings.streamUrl)
+    currentSettings.streamUrl = newSettings.streamUrl;
   if (newSettings.accessKey !== currentSettings.accessKey)
     currentSettings.accessKey = newSettings.accessKey;
-  if(newSettings.secretKey)
+  if (newSettings.secretKey)
     currentSettings.secretKey = crypto.encrypt(newSettings.secretKey);
   await currentSettings.save();
 }
 
-const settingsCache = {}
+const settingsCache = {};
 async function getDecryptedSettings(id) {
   let settings = settingsCache[id];
 
-  if(!settings) {
+  if (!settings) {
     settings = await getSettings(id);
     settings.secretKey = crypto.decrypt(settings.secretKey);
     settingsCache[id] = settings;
@@ -47,11 +49,11 @@ function clearSettingsCache(id) {
   settingsCache[id] = null;
 }
 
-module.exports = { 
+module.exports = {
   getSettingsByEmail,
   getSettings,
   updateSettings,
   getDecryptedSettings,
   clearSettingsCache,
-  getDefaulSettings
-}
+  getDefaulSettings,
+};

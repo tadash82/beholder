@@ -1,14 +1,20 @@
-const Binance = require('node-binance-api');
+const Binance = require("node-binance-api");
 
 module.exports = (settings) => {
-  if(!settings) throw new Error('The settings object is required to connect on exchange.')
+  if (!settings)
+    throw new Error("The settings object is required to connect on exchange.");
 
   const binance = new Binance({
     APIKEY: settings.accessKey,
     APISECRET: settings.secretKey,
     urls: {
-      base: settings.apiUrl.endsWith('/') ? settings.apiUrl : settings.apiUrl + '/'
-    }
+      base: settings.apiUrl.endsWith("/")
+        ? settings.apiUrl
+        : settings.apiUrl + "/",
+      stream: settings.streamUrl.endsWith("/")
+        ? settings.streamUrl
+        : settings.streamUrl + "/",
+    },
   });
 
   function exchangeInfo() {
@@ -16,12 +22,16 @@ module.exports = (settings) => {
   }
 
   function miniTickerStream(callback) {
-    binance.websockets.miniTicker(markets => callback(markets));
+    binance.websockets.miniTicker((markets) => callback(markets));
   }
 
+  function bookStream(callback) {
+    binance.websockets.bookTickers((order) => callback(order));
+  }
 
   return {
     exchangeInfo,
-    miniTickerStream
-  }
-}
+    miniTickerStream,
+    bookStream,
+  };
+};

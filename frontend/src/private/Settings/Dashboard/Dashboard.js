@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import useWebSocket from "react-use-websocket";
 import Menu from "../../../components/Menu/Menu";
-import LineChart from "./LineChart";
 import MiniTicker from "./MiniTicker/MiniTicker";
 import BookTicker from "./BookTicker/BookTicker";
+import Wallet from "./Wallet/Wallet";
+import CandleChart from "./CandleChart";
+import NewOrderButton from "../../../components/NewOrder/NewOrderButton";
 
 function Dashboard() {
   const [miniTickerState, setMiniTickerState] = useState({});
   const [bookState, setBookState] = useState({});
+  const [balanceState, setBalanceState] = useState({});
 
   const { lastJsonMessage } = useWebSocket(process.env.REACT_APP_WS_URL, {
     onOpen: () => console.log(`Connect to App WS Server`),
@@ -21,9 +24,10 @@ function Dashboard() {
           // console.log(bookState);
           setBookState(bookState);
         }
+        if (lastJsonMessage.balance) setBalanceState(lastJsonMessage.balance);
       }
     },
-    queryParams: {},
+    queryParams: { token: localStorage.getItem("token") },
     onError: (err) => console.error(err),
     shouldReconnect: (CloseEvent) => true,
     reconnectInterval: 3000,
@@ -36,11 +40,15 @@ function Dashboard() {
           <div className="d-block mb-4 mb-md-0">
             <h1 className="h4">Dashboard</h1>
           </div>
+          <div className="mb-4">
+            <NewOrderButton />
+          </div>
         </div>
-        <LineChart />
+        <CandleChart symbol="BTCUSD" />
         <MiniTicker data={miniTickerState} />
         <div className="row">
           <BookTicker data={bookState} />
+          <Wallet data={balanceState} />
         </div>
       </main>
     </>
